@@ -58,6 +58,13 @@
         </p>
 
         <p>
+            <label>
+                <input type="checkbox" id="filterImageOnly" onchange="performSearch()">
+                Show places with images only
+            </label>
+        </p>
+
+        <p>
             <button type="button" onclick="performSearch()">Search</button>
             <button type="button" onclick="resetFilters()">Reset Filters</button>
         </p>
@@ -114,7 +121,9 @@
             <label for="subDesc">Description & Hazards:</label><br>
             <textarea id="subDesc" rows="5" cols="40" required></textarea>
         </p>
-
+        <p>
+            <em>Note: If you have photos, please manually attach them to the email draft that opens when you click submit.</em>
+        </p>
         <p>
             <button type="submit">Submit Entry via Email</button>
         </p>
@@ -131,15 +140,16 @@
 
         const postsData = [
             {
-                id: "kopu_g_40",
-                title: "Kopu g. 40",
-                location: "Sventoji, Lithuania",
+                id: "place_example",
+                title: "Abandoned Industrial Canal Drain",
+                location: "Sector 4 Outer Culverts",
                 type: "Open",
-                danger: "Moderate",
-                rating: 2,
-                hasImage: false,
-                detailPage: "",
-                description: "Absolutely horrible for 50 bucks a night holy shit",
+                danger: "High",
+                rating: 4,
+                hasImage: true,
+                imageSrc: "images/industrial_drain.jpg",
+                detailPage: "place_example.html",
+                description: "An open concrete drainage system prone to sudden flash runoff and unsafe slippery structures.",
                 defaultAgree: 0,
                 defaultDisagree: 0
             },
