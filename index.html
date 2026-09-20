@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Worst Places You Shouldn't Go To</title>
+</head>
+<body>
+
+    <h1>Worst Places You Shouldn't Go To</h1>
+    <p>A user-submitted archive of hazardous, uncomfortable, or undesirable locations.</p>
+    <p>To submit a new place entry via email, send details and images to: 
+        <a href="mailto:wpysgtsubmit@gmail.com">wpysgtsubmit@gmail.com</a>
+    </p>
+
+    <hr>
+
+    <h2>Search & Filter Archive</h2>
+
+    <form id="searchForm" onsubmit="return false;">
+        <p>
+            <label for="searchInput">Search Query:</label><br>
+            <input type="text" id="searchInput" placeholder="Type to search titles, locations, descriptions..." oninput="performSearch()">
+        </p>
+
+        <p>
+            <label for="filterType">Place Type:</label><br>
+            <select id="filterType" onchange="performSearch()">
+                <option value="Any">Any</option>
+                <option value="Open">Open</option>
+                <option value="Indoor">Indoor</option>
+                <option value="Underground">Underground</option>
+                <option value="Restricted">Restricted</option>
+            </select>
+        </p>
+
+        <p>
+            <label for="filterDanger">Danger Level:</label><br>
+            <select id="filterDanger" onchange="performSearch()">
+                <option value="Any">Any</option>
+                <option value="Low">Low</option>
+                <option value="Moderate">Moderate</option>
+                <option value="High">High</option>
+                <option value="Critical">Critical</option>
+            </select>
+        </p>
+
+        <p>
+            <label for="filterRating">Experience Rating:</label><br>
+            <select id="filterRating" onchange="performSearch()">
+                <option value="Any">Any</option>
+                <option value="1">1 - Mildly Annoying</option>
+                <option value="2">2 - Uncomfortable</option>
+                <option value="3">3 - Dangerous</option>
+                <option value="4">4 - Extremely Hazardous</option>
+                <option value="5">5 - Absolute Nightmare</option>
+            </select>
+        </p>
+
+        <p>
+            <label>
+                <input type="checkbox" id="filterImageOnly" onchange="performSearch()">
+                Show places with images only
+            </label>
+        </p>
+
+        <p>
+            <button type="button" onclick="performSearch()">Search</button>
+            <button type="button" onclick="resetFilters()">Reset Filters</button>
+        </p>
+    </form>
+
+    <hr>
+
+    <h2>Search Results (<span id="resultCount">0</span>)</h2>
+    <div id="resultsContainer">
+        <p>Type in the search bar above or choose a filter to search archived locations.</p>
+    </div>
+
+    <hr>
+
+    <h2>Submit a New Location</h2>
+    <form id="submissionForm" onsubmit="handleFormSubmit(event)">
+        <p>
+            <label for="subTitle">Location Name:</label><br>
+            <input type="text" id="subTitle" required>
+        </p>
+        <p>
+            <label for="subLocation">City / Region / Country:</label><br>
+            <input type="text" id="subLocation" required>
+        </p>
+        <p>
+            <label for="subType">Place Type:</label><br>
+            <select id="subType">
+                <option value="Open">Open</option>
+                <option value="Indoor">Indoor</option>
+                <option value="Underground">Underground</option>
+                <option value="Restricted">Restricted</option>
+            </select>
+        </p>
+        <p>
+            <label for="subDanger">Danger Level:</label><br>
+            <select id="subDanger">
+                <option value="Low">Low</option>
+                <option value="Moderate">Moderate</option>
+                <option value="High">High</option>
+                <option value="Critical">Critical</option>
+            </select>
+        </p>
+        <p>
+            <label for="subRating">Experience Rating:</label><br>
+            <select id="subRating">
+                <option value="1 - Mildly Annoying">1 - Mildly Annoying</option>
+                <option value="2 - Uncomfortable">2 - Uncomfortable</option>
+                <option value="3 - Dangerous">3 - Dangerous</option>
+                <option value="4 - Extremely Hazardous">4 - Extremely Hazardous</option>
+                <option value="5 - Absolute Nightmare">5 - Absolute Nightmare</option>
+            </select>
+        </p>
+        <p>
+            <label for="subDesc">Description & Hazards:</label><br>
+            <textarea id="subDesc" rows="5" cols="40" required></textarea>
+        </p>
+        <p>
+            <em>Note: If you have photos, please manually attach them to the email draft that opens when you click submit.</em>
+        </p>
+        <p>
+            <button type="submit">Submit Entry via Email</button>
+        </p>
+    </form>
+
+    <script>
+        const ratingLabels = {
+            1: "1 - Mildly Annoying",
+            2: "2 - Uncomfortable",
+            3: "3 - Dangerous",
+            4: "4 - Extremely Hazardous",
+            5: "5 - Absolute Nightmare"
+        };
+
+        const postsData = [
+            {
+                id: "place_example",
+                title: "Abandoned Industrial Canal Drain",
+                location: "Sector 4 Outer Culverts",
+                type: "Open",
+                danger: "High",
+                rating: 4,
+                hasImage: true,
+                imageSrc: "images/industrial_drain.jpg",
+                detailPage: "place_example.html",
+                description: "An open concrete drainage system prone to sudden flash runoff and unsafe slippery structures.",
+                defaultAgree: 0,
+                defaultDisagree: 0
+            },
+            {
+                id: "sulfur_creek",
+                title: "Sulfur Creek Quarry",
+                location: "East Ridge District",
+                type: "Open",
+                danger: "Critical",
+                rating: 5,
+                hasImage: true,
+                imageSrc: "images/sulfur_creek.jpg",
+                detailPage: null,
+                description: "Open-air stagnant chemical runoff ponds surrounded by steep unstable shale cliffs.",
+                defaultAgree: 0,
+                defaultDisagree: 0
+            },
+            {
+                id: "subbasement_level_3",
+                title: "Old Municipal Sub-Basement Level 3",
+                location: "Central District",
+                type: "Underground",
+                danger: "Moderate",
+                rating: 3,
+                hasImage: false,
+                imageSrc: "",
+                detailPage: null,
+                description: "Unlit underground corridor network containing exposed electrical conduits and persistent standing water.",
+                defaultAgree: 0,
+                defaultDisagree: 0
+            },
+            {
+                id: "derelict_silo",
+                title: "North Grain Elevator Tower",
+                location: "Rural Highway 12",
+                type: "Restricted",
+                danger: "Critical",
+                rating: 5,
+                hasImage: true,
+                imageSrc: "images/grain_silo.jpg",
+                detailPage: null,
+                description: "Severely rusted structural framing, rotten ladder rungs, and unsealed vertical chute shafts.",
+                defaultAgree: 0,
+                defaultDisagree: 0
+            }
+        ];
+
+        function getVoteData(postId, defaultAgree, defaultDisagree) {
+            const storedAgree = localStorage.getItem("wpysgt_agree_" + postId);
+            const storedDisagree = localStorage.getItem("wpysgt_disagree_" + postId);
+            const userVote = localStorage.getItem("wpysgt_voted_" + postId);
+
+            return {
+                agree: storedAgree !== null ? parseInt(storedAgree, 10) : defaultAgree,
+                disagree: storedDisagree !== null ? parseInt(storedDisagree, 10) : defaultDisagree,
+                userVote: userVote
+            };
+        }
+
+        function castVote(postId, type, defaultAgree, defaultDisagree) {
+            const voteData = getVoteData(postId, defaultAgree, defaultDisagree);
+
+            if (voteData.userVote) {
+                alert("You have already voted on this place.");
+                return;
+            }
+
+            if (type === 'agree') {
+                voteData.agree += 1;
+                localStorage.setItem("wpysgt_agree_" + postId, voteData.agree);
+            } else if (type === 'disagree') {
+                voteData.disagree += 1;
+                localStorage.setItem("wpysgt_disagree_" + postId, voteData.disagree);
+            }
+
+            localStorage.setItem("wpysgt_voted_" + postId, type);
+            performSearch();
+        }
+
+        function performSearch() {
+            const query = document.getElementById("searchInput").value.toLowerCase().trim();
+            const selectedType = document.getElementById("filterType").value;
+            const selectedDanger = document.getElementById("filterDanger").value;
+            const selectedRating = document.getElementById("filterRating").value;
+            const imageOnly = document.getElementById("filterImageOnly").checked;
+
+            const resultsContainer = document.getElementById("resultsContainer");
+
+            const isFilterActive = selectedType !== "Any" || selectedDanger !== "Any" || selectedRating !== "Any" || imageOnly;
+
+            if (query === "" && !isFilterActive) {
+                document.getElementById("resultCount").textContent = "0";
+                resultsContainer.innerHTML = "<p>Type in the search bar above or choose a filter to search archived locations.</p>";
+                return;
+            }
+
+            resultsContainer.innerHTML = "";
+
+            const filteredPosts = postsData.filter(post => {
+                const matchesQuery = query === "" || 
+                    post.title.toLowerCase().includes(query) ||
+                    post.location.toLowerCase().includes(query) ||
+                    post.description.toLowerCase().includes(query);
+
+                const matchesType = selectedType === "Any" || post.type === selectedType;
+                const matchesDanger = selectedDanger === "Any" || post.danger === selectedDanger;
+                const matchesRating = selectedRating === "Any" || post.rating.toString() === selectedRating;
+                const matchesImage = !imageOnly || post.hasImage;
+
+                return matchesQuery && matchesType && matchesDanger && matchesRating && matchesImage;
+            });
+
+            document.getElementById("resultCount").textContent = filteredPosts.length;
+
+            if (filteredPosts.length === 0) {
+                resultsContainer.innerHTML = "<p>No entries found matching your search parameters.</p>";
+                return;
+            }
+
+            filteredPosts.forEach(post => {
+                const votes = getVoteData(post.id, post.defaultAgree, post.defaultDisagree);
+                
+                const postElement = document.createElement("div");
+                
+                let imageHTML = "";
+                if (post.hasImage && post.imageSrc) {
+                    imageHTML = '<p><img src="' + post.imageSrc + '" alt="' + post.title + '" width="320" onerror="this.onerror=null; this.alt=\'Local image file not found (' + post.imageSrc + ')\';"></p>';
+                } else {
+                    imageHTML = '<p><em>No image provided for this location.</em></p>';
+                }
+
+                let linkHTML = "";
+                if (post.detailPage) {
+                    linkHTML = '<p><a href="' + post.detailPage + '">View Full Page Details</a></p>';
+                }
+
+                let userVoteStatus = "";
+                if (votes.userVote) {
+                    userVoteStatus = " (You voted: " + votes.userVote.toUpperCase() + ")";
+                }
+
+                postElement.innerHTML = 
+                    '<h3>' + post.title + '</h3>' +
+                    '<p><strong>Location:</strong> ' + post.location + '</p>' +
+                    '<p><strong>Place Type:</strong> ' + post.type + '</p>' +
+                    '<p><strong>Danger Level:</strong> ' + post.danger + '</p>' +
+                    '<p><strong>Experience Rating:</strong> ' + ratingLabels[post.rating] + '</p>' +
+                    imageHTML +
+                    '<p>' + post.description + '</p>' +
+                    '<p>' +
+                        '<button type="button" onclick="castVote(\'' + post.id + '\', \'agree\', ' + post.defaultAgree + ', ' + post.defaultDisagree + ')" ' + (votes.userVote ? 'disabled' : '') + '>Agree (' + votes.agree + ')</button> ' +
+                        '<button type="button" onclick="castVote(\'' + post.id + '\', \'disagree\', ' + post.defaultAgree + ', ' + post.defaultDisagree + ')" ' + (votes.userVote ? 'disabled' : '') + '>Disagree (' + votes.disagree + ')</button>' +
+                        '<span>' + userVoteStatus + '</span>' +
+                    '</p>' +
+                    linkHTML +
+                    '<hr>';
+
+                resultsContainer.appendChild(postElement);
+            });
+        }
+
+        function resetFilters() {
+            document.getElementById("searchInput").value = "";
+            document.getElementById("filterType").value = "Any";
+            document.getElementById("filterDanger").value = "Any";
+            document.getElementById("filterRating").value = "Any";
+            document.getElementById("filterImageOnly").checked = false;
+            performSearch();
+        }
+
+        /* Handler to construct and open mailto: link */
+        function handleFormSubmit(event) {
+            event.preventDefault();
+
+            const title = document.getElementById("subTitle").value.trim();
+            const location = document.getElementById("subLocation").value.trim();
+            const type = document.getElementById("subType").value;
+            const danger = document.getElementById("subDanger").value;
+            const rating = document.getElementById("subRating").value;
+            const desc = document.getElementById("subDesc").value.trim();
+
+            const subject = encodeURIComponent("WPYSGT Submission: " + title);
+            const bodyText = "Location Name: " + title + "\n" +
+                             "City/Region: " + location + "\n" +
+                             "Place Type: " + type + "\n" +
+                             "Danger Level: " + danger + "\n" +
+                             "Experience Rating: " + rating + "\n\n" +
+                             "Description & Hazards:\n" + desc + "\n\n" +
+                             "[Attach photos to this email if applicable]";
+
+            const body = encodeURIComponent(bodyText);
+
+            window.location.href = "mailto:wpysgtsubmit@gmail.com?subject=" + subject + "&body=" + body;
+        }
+    </script>
+</body>
+</html>
