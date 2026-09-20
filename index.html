@@ -60,7 +60,7 @@
         <p>
             <label>
                 <input type="checkbox" id="filterImageOnly" onchange="performSearch()">
-                Useless checkbox
+                Useless checkbox to not break the search filter
             </label>
         </p>
 
@@ -151,48 +151,7 @@
                 defaultAgree: 0,
                 defaultDisagree: 0
             },
-            {
-                id: "sulfur_creek",
-                title: "Sulfur Creek Quarry",
-                location: "East Ridge District",
-                type: "Open",
-                danger: "Critical",
-                rating: 5,
-                hasImage: true,
-                imageSrc: "images/sulfur_creek.jpg",
-                detailPage: null,
-                description: "Open-air stagnant chemical runoff ponds surrounded by steep unstable shale cliffs.",
-                defaultAgree: 0,
-                defaultDisagree: 0
-            },
-            {
-                id: "subbasement_level_3",
-                title: "Old Municipal Sub-Basement Level 3",
-                location: "Central District",
-                type: "Underground",
-                danger: "Moderate",
-                rating: 3,
-                hasImage: false,
-                imageSrc: "",
-                detailPage: null,
-                description: "Unlit underground corridor network containing exposed electrical conduits and persistent standing water.",
-                defaultAgree: 0,
-                defaultDisagree: 0
-            },
-            {
-                id: "derelict_silo",
-                title: "North Grain Elevator Tower",
-                location: "Rural Highway 12",
-                type: "Restricted",
-                danger: "Critical",
-                rating: 5,
-                hasImage: true,
-                imageSrc: "images/grain_silo.jpg",
-                detailPage: null,
-                description: "Severely rusted structural framing, rotten ladder rungs, and unsealed vertical chute shafts.",
-                defaultAgree: 0,
-                defaultDisagree: 0
-            }
+
         ];
 
         function getVoteData(postId, defaultAgree, defaultDisagree) {
@@ -276,7 +235,7 @@
                 if (post.hasImage && post.imageSrc) {
                     imageHTML = '<p><img src="' + post.imageSrc + '" alt="' + post.title + '" width="320" onerror="this.onerror=null; this.alt=\'Local image file not found (' + post.imageSrc + ')\';"></p>';
                 } else {
-                    imageHTML = '<p><em>No image provided for this location.</em></p>';
+                    imageHTML = '<p><em>Useless text to not break the search filter</em></p>';
                 }
 
                 let linkHTML = "";
